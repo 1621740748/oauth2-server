@@ -2,7 +2,7 @@ FROM openjdk:8u242-jdk
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 VOLUME /tmp
-ADD ./target/myCommunity-0.0.1-SNAPSHOT.jar  app.jar
+ADD ./target/oauth2-server-0.0.3-SNAPSHOT.jar  app.jar
 ENV JAVA_OPTS=""
-EXPOSE 8084
+EXPOSE 10380
 ENTRYPOINT exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar
