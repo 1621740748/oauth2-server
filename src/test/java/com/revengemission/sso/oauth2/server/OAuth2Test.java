@@ -21,17 +21,17 @@ public class OAuth2Test {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
 
-    private String issuerUrl = "http://localhost:10380";
+    private String issuerUrl = "http://192.168.0.104:10380";
 
     @Test
-    @Ignore
+    //@Ignore
     public void encodePassword() {
         System.out.println("tgb.258------" + new BCryptPasswordEncoder().encode("tgb.258"));
     }
 
 
     @Test
-    @Ignore
+  //  @Ignore
     public void flowTest() throws IOException {
         Map<String, String> result = getToken();
 
