@@ -1,5 +1,12 @@
-## SpringBoot 2.x oauth2 server, SSO 单点登录
-## **_<font color=#ff0000 size=72>！！！本次改动较大，产生不兼容，更新后需要重建表结构！！！</font>_**
+#
+#
+# spring-security-oauth2项目官方团队已宣布停止进一步开发，本项目也将暂停更新
+# [Spring 官方声明](https://spring.io/blog/2019/11/14/spring-security-oauth-2-0-roadmap-update)
+## 推荐使用其他开源方案，如  https://www.keycloak.org
+#
+#
+
+## SpringBoot 2.2.x oauth2 server, SSO 单点登录
 
 ## 创建数据库：持久层采用JPA框架，项目启动前必须先创建数据库，启动时数据表会自动创建</br>
 ````
@@ -12,13 +19,12 @@ grant all privileges on oauth2_server.* to 'oauth2_server'@'localhost';
 
 #初始化数据sql在src/main/resources/sql/init.sql,可自行修改client_id等初始化数据
 ````
-## 管理员角色登录后，可以对用户和client进行管理</br>
 ## 支持的4种授权模式grant_type</br>
 ````
 authorization_code,implicit,password,client_credentials;
 ````
 #####
-* authorization_code模式：**用于PC端，页面跳转**，安全性最高，需要两步获取token
+* authorization_code模式：**用于PC端，页面跳转**，安全性最高，需要两步获取token;`需确保redirect_uri和数据库中对应的redirect_uri一致`
 ````
 1. Get /oauth/authorize?client_id=SampleClientId&response_type=code&redirect_uri=http://client.sso.com/login/oauth2/code/sso-login
 用户同意授权后服务端响应,浏览器重定向到：http://client.sso.com/login?code=1E37Xk，接收code,然后后端调用步骤2获取token
@@ -61,13 +67,17 @@ Get /oauth/token_key
 ````
 Get /.well-known/jwks.json
 ````
+## issuer-uri：resource server 可以得到jwt token签名公钥等信息
+````
+Get /.well-known/oauth-authorization-server
+````
 
 ## 验证token，用于在资源端调用验证token是否有效</br>
 ````
 Post /oauth/check_token?token=a.b.c
 ````
 
-## 访问受保护资源，请求时携带token</br>
+## 访问受保护资源，请求时携带token
 ````
 Get /user/me?access_token=a.b.c
 或者http header中加入Authorization,如下
@@ -109,10 +119,12 @@ Post /oauth/token?client_id=SampleClientId&client_secret=tgb.258&grant_type=refr
 
 ## 启动方法</br>
 ````
-java -jar oauth2-server-0.0.1-SNAPSHOT.jar
+java -jar oauth2-server-0.0.3-SNAPSHOT.jar
 或者指定配置文件覆盖默认配置
-java -jar oauth2-server-0.0.1-SNAPSHOT.jar --spring.config.additional-location=/path/to/override.properties
+java -jar oauth2-server-0.0.3-SNAPSHOT.jar --spring.config.additional-location=/path/to/override.properties
 ````
+
+## 管理员角色登录后，可以对用户和client进行管理</br>
 ## 效果图
 ![登录页](https://raw.githubusercontent.com/jobmission/oauth2-server/master/src/test/resources/static/imgs/login.png)
 ![用户管理](https://raw.githubusercontent.com/jobmission/oauth2-server/master/src/test/resources/static/imgs/users.png)
@@ -125,8 +137,6 @@ java -jar oauth2-server-0.0.1-SNAPSHOT.jar --spring.config.additional-location=/
 [client 前端DEMO](https://github.com/jobmission/oauth2-client.git) <br/>
 [api 资源接口端DEMO](https://github.com/jobmission/oauth2-resource.git)
 
-### TODO LIST
-* 分布式支持
 
 ## 注意！！！
 当Server和Client在一台机器上时，请配置域名代理，避免cookie相互覆盖

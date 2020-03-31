@@ -79,10 +79,13 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Value("${thirdparty.weixin.mini.secret:1}")
     private String secret;
 
+    @Value("${oauth2.issuer-uri:http://localhost:10380}")
+    private String issuerUri;
+
     @Bean
     public KeyPair keyPair() {
         KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jwt.jks"),
-            "keypass".toCharArray());
+            "keypass" .toCharArray());
         return keyStoreKeyFactory.getKeyPair("jwt");
     }
 
@@ -100,7 +103,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     public TokenEnhancer tokenEnhancer() {
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
         // CustomTokenEnhancer 是我自定义一些数据放到token里用的
-        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(new CustomTokenEnhancer(), accessTokenConverter()));
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(new CustomTokenEnhancer(issuerUri), accessTokenConverter()));
         return tokenEnhancerChain;
     }
 
@@ -216,7 +219,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 authorizationServerTokenServices(), clientDetailsService, oAuth2RequestFactory()));
         }
 
-        tokenGranters.add(new SMSCodeTokenGranter(userDetailsService, authorizationServerTokenServices(),
+        tokenGranters.add(new SmsCodeTokenGranter(userDetailsService, authorizationServerTokenServices(),
             clientDetailsService, oAuth2RequestFactory(), captchaService));
 
         tokenGranters.add(new WeChatMiniProgramTokenGranter(thirdPartyAccountRepository, roleRepository, authorizationServerTokenServices(),
