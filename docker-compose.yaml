@@ -1,0 +1,24 @@
+version: '3'
+services:
+    mycomm:
+        build:
+            context: ./ 
+            dockerfile: app-Dockerfile
+        restart: always
+        links:
+          - db
+        depends_on:
+          - db
+        ports:
+          - 10380:10380
+    db:
+        image: mysql
+        command: --default-authentication-plugin=mysql_native_password
+        restart: always
+        environment:
+           MYSQL_ROOT_PASSWORD: example123
+           MYSQL_DATABASE: oauth2_server
+#        volumes:
+#          - ./mysql:/docker-entrypoint-initdb.d   
+        ports:
+          - 3306:3306   
